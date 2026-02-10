@@ -45,4 +45,25 @@ $result = $conn->query($sql);
         <th>Image</th>
     </tr>
 
-    <?php
+    <?php while ($row = $result->fetch_assoc()): ?>
+    <tr>
+        <td><?php echo htmlspecialchars($row['equip_id']); ?></td>
+        <td><?php echo htmlspecialchars($row['equip_brand']); ?></td>
+        <td><?php echo htmlspecialchars($row['equip_label']); ?></td>
+        <td><?php echo htmlspecialchars($row['equip_qty']); ?></td>
+        <td>
+            <?php if (!empty($row['equip_img'])): ?>
+                <img src="<?php echo htmlspecialchars($row['equip_img']); ?>" alt="Image">
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endwhile; ?>
+</table>
+<?php else: ?>
+    <p>No equipment records found.</p>
+<?php endif; ?>
+
+<?php $conn->close(); ?>
+
+</body>
+</html>
