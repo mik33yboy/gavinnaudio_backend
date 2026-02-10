@@ -1,2 +1,2 @@
 <?php
-gumagana men
+echo "Backend is alive 🚀";
