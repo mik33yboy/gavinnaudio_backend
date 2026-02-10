@@ -6,9 +6,8 @@ RUN docker-php-ext-install mysqli
 # Enable rewrite
 RUN a2enmod rewrite
 
-# Make sure only prefork MPM is enabled
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork
+# Make sure only prefork MPM is enabled (disable all MPMs first just in case)
+RUN a2dismod mpm_event mpm_worker mpm_prefork || true && a2enmod mpm_prefork
 
 # Tell Apache to listen on 8080 (Railway)
 ENV APACHE_LISTEN_PORT=8080
