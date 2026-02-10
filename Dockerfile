@@ -1,23 +1,15 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Enable mysqli
+WORKDIR /var/www/html
+
+# Enable mysqli extension
 RUN docker-php-ext-install mysqli
 
-# Enable rewrite
-RUN a2enmod rewrite
-
-# Make sure only prefork MPM is enabled (force-remove all MPM configs, then enable prefork)
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf \
-    && a2enmod mpm_prefork
-
-# Tell Apache to listen on 8080 (Railway)
-ENV APACHE_LISTEN_PORT=8080
-RUN sed -i "s/Listen 80/Listen 8080/" /etc/apache2/ports.conf
-
-# Copy app
+# Copy app code
 COPY . /var/www/html/
 
-# Permissions
-RUN chown -R www-data:www-data /var/www/html
-
+# Expose default HTTP port (Railway will map this)
 EXPOSE 8080
+
+# Run PHP's built-in web server (no Apache, no MPM issues)
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} -t /var/www/html"]
